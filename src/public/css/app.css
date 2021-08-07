@@ -1,0 +1,9 @@
+.container{
+    padding-top: 20px;
+}
+
+p{
+    background-color: darkgray;
+    padding: 10px;
+    border-radius: 5px;
+}

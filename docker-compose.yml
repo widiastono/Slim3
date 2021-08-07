@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  ### PHP-FPM
+  app:
+    build: .
+    # image: Slim4
+    volumes:
+      - ./src:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - appnet
+
+  ### NGiNX Service
+  nginx:
+    image: nginx:alpine
+    restart: 'no'
+    ports:
+      - 8020:80
+    volumes:
+      - ./src:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+     # - ./nginx/ssl/:/etc/nginx/ssl
+    networks:
+      - appnet
+
+  ### MySQL Service
+  db:
+    image: mysql:5.7.22
+    command: --default-authentication-plugin=mysql_native_password
+    restart: 'no'
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_ROOT_PASSWORD: 'toor'
+    ports:
+      - 3320:3306
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
+volumes:
+  data:
+    driver: local
